@@ -1,4 +1,4 @@
-## Flume-FtpSink
+## Flume Ftp Sink
 
 | Property Name	 | Default | Description |
 | :------------: |:------------| :-----|
