@@ -18,6 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author mat
+ */
 public class FtpSink extends AbstractSink  implements Configurable, BatchSizeSupported {
 
     private static final Logger logger = LoggerFactory.getLogger(FtpSink.class);
@@ -33,11 +37,12 @@ public class FtpSink extends AbstractSink  implements Configurable, BatchSizeSup
 
     private FTPClient ftpClient;
 
-    private static final int defaultBatchSize = 1000;
+    private static final int DEFAULT_BATCH_SIZE = 1000;
+    private static final int INTERVAL_SECONDS = 5;
     private int batchSize;
 
     private static final String WORK_DIR_PATH = "/tmp/flume/";
-    private File workDir = new File(WORK_DIR_PATH);
+    private final File workDir = new File(WORK_DIR_PATH);
 
     private SinkCounter sinkCounter;
 
@@ -53,7 +58,7 @@ public class FtpSink extends AbstractSink  implements Configurable, BatchSizeSup
         tempSuffix = context.getString("tempSuffix", ".tmp");
         prefix = context.getString("prefix", "DATA-");
 
-        batchSize = context.getInteger("batchSize", defaultBatchSize);
+        batchSize = context.getInteger("batchSize", DEFAULT_BATCH_SIZE);
 
         ftpClient = new FTPClient();
 
@@ -130,7 +135,7 @@ public class FtpSink extends AbstractSink  implements Configurable, BatchSizeSup
 
 
     private void connectServer() {
-        for (int i = 5; ; i+=5) {
+        for (int i = 5; ; i+=INTERVAL_SECONDS) {
             try {
                 ftpClient.connect(host, port);
                 ftpClient.login(user, password);
