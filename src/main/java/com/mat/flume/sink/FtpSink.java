@@ -114,8 +114,6 @@ public class FtpSink extends AbstractSink  implements Configurable, BatchSizeSup
                 dealEventList(batch);
             }
 
-
-            transaction.commit();
             sinkCounter.addToEventDrainSuccessCount(batch.size());
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -123,6 +121,7 @@ public class FtpSink extends AbstractSink  implements Configurable, BatchSizeSup
             transaction.rollback();
             throw new EventDeliveryException("Failed to send events", ex);
         } finally {
+            transaction.commit();
             transaction.close();
         }
 
